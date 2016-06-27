@@ -215,16 +215,13 @@ L.LinkedTag = L.Class.extend({
         draggable: true,
         noHide: true,
         zoomAnimation: true,
-        offset: [48, 48],
-        'background': '#fffffa',
-        'border-color': '#555',
-        'border-radius': '4px',
-        'border-style': 'solid',
+        offset: [48, -48],
+        'color': '#777',
+        'fillColor': '#fffff9',
+        'font': '16px Verdana',
+        'padding': '2px 4px',
         'border-width': '2px',
-        'color': '#111',
-        'font-size': '1em',
-        'padding': '1px 6px',
-        'opacity': 1,
+        'border-color': '#777',
         lineOptions: null
     },
 
@@ -234,50 +231,6 @@ L.LinkedTag = L.Class.extend({
         this._source = source;
         this._animated = L.Browser.any3d && this.options.zoomAnimation;
         this._isOpen = false;
-        this._updateStyle();
-    },
-
-    _updateStyle: function () {
-        if (this._container) {
-            var style = this._container.style, style_key;
-
-            style_key = 'background';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'border-color';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'border-radius';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'border-style';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'border-width';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'font-size';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'font-weight';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'color';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-            style_key = 'padding';
-            if (this.options[style_key]) {
-                this._container.style[style_key] = this.options[style_key];
-            }
-        }
     },
 
     onAdd: function (map) {
@@ -294,9 +247,6 @@ L.LinkedTag = L.Class.extend({
         this._initInteraction();
 
         this._update();
-
-        this.setOpacity(this.options.opacity);
-        this._updateStyle();
 
         map
             .on('moveend', this._onMoveEnd, this)
@@ -397,12 +347,106 @@ L.LinkedTag = L.Class.extend({
             return;
         }
 
+        function _parse_str_to_int(txt) {
+            if (txt.length > 2) {
+                if (txt.charAt(txt.length-2) == 'p') {
+                    txt = txt.substr(0, txt.length-2);
+                }
+            }
+            try {
+                return parseInt(txt, 10);
+            }
+            catch(e) {}
+            return 0;
+        };
+
         if (typeof this._content === 'string') {
-            this._container.innerHTML = this._content;
+            var ctx = null;
 
-            this._prevContent = this._content;
+            if (this._content_ctx) {
+                ctx = this._content_canvas.getContext("2d");
+                ctx.clearRect(0, 0, this._content_canvas.width, this._content_canvas.height);
+            }
+            else {
+                this._content_canvas = L.DomUtil.create('canvas', '');
+                this._container.appendChild(this._content_canvas);
+                ctx = this._content_canvas.getContext("2d");
+            }
 
-            this._tagWidth = this._container.offsetWidth;
+            if (this.options.font) {
+                ctx.font = this.options.font;
+            }
+            var txtWidth = ctx.measureText(this._content).width;
+            var txtHeight = 24;
+            try {
+                var _font_size = ctx.font.split(' ')[0];
+                txtHeight = _parse_str_to_int(_font_size);
+            }
+            catch(e) {}
+
+            var _padding_left = 0, _padding_top = 0;
+            if (this.options.padding) {
+                var _type = typeof(this.options.padding);
+                if (_type == 'string') {
+                    var _txts = this.options.padding.split(' ');
+                    if (_txts.length > 0) {
+                        _padding_top = _parse_str_to_int(_txts[0]);
+                        if (_txts.length > 1) {
+                            _padding_left = _parse_str_to_int(_txts[1]);
+                        }
+                        else {
+                            _padding_left = _padding_top;
+                        }
+                    }
+                }
+                else if (_type == 'number') {
+                    _padding_left = this.options.padding;
+                    _padding_top = this.options.padding;
+                }
+            }
+
+            var _border = 0;
+            if (this.options['border-width']) {
+                var _type = typeof(this.options['border-width']);
+                if (_type == 'string') {
+                    _border = _parse_str_to_int(this.options['border-width']);
+                }
+                else if (_type == 'number') {
+                    _border = this.options['border-width'];
+                }
+                _padding_left += _border;
+                _padding_top += _border;
+            }
+
+            if (_padding_left > 0) {
+                txtWidth += (_padding_left * 2);
+            }
+            if (_padding_top > 0) {
+                txtHeight += (_padding_top * 2);
+            }
+            this._content_canvas.width = txtWidth;
+            this._content_canvas.height = txtHeight;
+
+            if (this.options.fillColor) {
+                ctx.fillStyle = this.options.fillColor;
+            }
+            ctx.fillRect(0, 0, txtWidth, txtHeight);
+
+            if (_border) {
+                ctx.lineWidth = _border;
+                if (this.options['border-color']) {
+                    ctx.strokeStyle = this.options['border-color'];
+                }
+                ctx.strokeRect(0+(_border/2), 0+(_border/2), txtWidth-_border, txtHeight-_border);
+            }
+
+            if (this.options.color) {
+                ctx.fillStyle = this.options.color;
+            }
+            if (this.options.font) {
+                ctx.font = this.options.font;
+            }
+            ctx.fillText(this._content, _padding_left, txtHeight - _padding_top - 3);
         }
     },
 

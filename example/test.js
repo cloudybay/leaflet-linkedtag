@@ -3,14 +3,7 @@
 
 var map_test = {
     bindTag: function(marker) {
-        marker.bindTag('TEST', {
-            'background': '#fffffa',
-            'border-color': '#555',
-            'border-radius': '4px',
-            'border-style': 'solid',
-            'border-width': '2px',
-            'color': '#111',
-            'opacity': 0.9,
+        marker.bindTag('測2016 81:00', {
             lineOptions: {
                 color: '#f00'
             }
