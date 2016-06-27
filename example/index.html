@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Leaflet Provider Demo</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<!-- Leaflet style. REQUIRED! -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	<style>
+		html { height: 100%; }
+		body { height: 100%; margin: 0; padding: 0;}
+		.map { width: 600px; height: 400px; }
+	</style>
+</head>
+<body>
+	<div id="map" class="map"></div>
+
+    <div>
+    </div>
+
+
+    <link rel="stylesheet" href="../leaflet-linkedtag.css" />
+    <script src="../leaflet-linkedtag.js"></script>
+
+    <script src="test.js"></script>
+
+	<script>
+		var map = new L.Map('map',{zoomControl:false}).setView([23, 121], 6);
+        var baselayer = L.tileLayer('http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png', {
+            unloadInvisibleTiles: false
+        });
+        map.addLayer(baselayer);
+
+        var marker = new L.Marker([23, 120], {draggable: true});
+        marker.addTo(map);
+
+        map_test.bindTag(marker);
+
+	</script>
+
+</body>
+</html>
