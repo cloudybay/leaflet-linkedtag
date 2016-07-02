@@ -245,8 +245,8 @@ L.LinkedTag = L.Class.extend({
         this._pane.appendChild(this._container);
 
         this._initInteraction();
-
         this._update();
+
 
         map
             .on('moveend', this._onMoveEnd, this)
@@ -363,7 +363,7 @@ L.LinkedTag = L.Class.extend({
         if (typeof this._content === 'string') {
             var ctx = null;
 
-            if (this._content_ctx) {
+            if (this._content_canvas) {
                 ctx = this._content_canvas.getContext("2d");
                 ctx.clearRect(0, 0, this._content_canvas.width, this._content_canvas.height);
             }

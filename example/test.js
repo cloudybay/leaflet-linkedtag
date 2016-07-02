@@ -3,7 +3,7 @@
 
 var map_test = {
     bindTag: function(marker) {
-        marker.bindTag('測2016 81:00', {
+        marker.bindTag('Linked Tag', {
             lineOptions: {
                 color: '#f00'
             }
