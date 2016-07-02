@@ -29,13 +29,13 @@
     <script src="test.js"></script>
 
 	<script>
-		var map = new L.Map('map',{zoomControl:false}).setView([23, 121], 6);
+		var map = new L.Map('map',{zoomControl:false}).setView([25.0, 121.5], 6);
         var baselayer = L.tileLayer('http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png', {
             unloadInvisibleTiles: false
         });
         map.addLayer(baselayer);
 
-        var marker = new L.Marker([23, 120], {draggable: true});
+        var marker = new L.Marker([25.0, 121.5], {draggable: true});
         marker.addTo(map);
 
         map_test.bindTag(marker);

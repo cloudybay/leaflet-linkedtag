@@ -3,10 +3,11 @@
 
 var map_test = {
     bindTag: function(marker) {
-        marker.bindTag('Linked Tag', {
+        marker.bindTag('雲灣資訊', {
             lineOptions: {
-                color: '#f00'
-            }
+                color: '#f00',
+            },
+            offset: [80, -80]
         });
         marker.showTag();
 
