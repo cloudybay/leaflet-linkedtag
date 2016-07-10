@@ -3,7 +3,7 @@ leaflet-linkedtag
 
 Create a draggable Tag line to it's owner Marker.
 
-Check out the [demo](http://cloudybay.github.io/leaflet-linkedtag/example/).
+Check out the [demo](https://cloudybay.github.io/leaflet-linkedtag/example/).
 
 ### Usage example
 
